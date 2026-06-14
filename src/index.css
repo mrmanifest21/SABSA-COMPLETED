@@ -1,0 +1,197 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --deep-navy: #0A1628;
+    --cobalt: #1E3A5F;
+    --primary-blue: #2563EB;
+    --cyan: #06B6D4;
+    --vibrant-red: #E63946;
+    --warm-red: #F4A261;
+    --white: #FFFFFF;
+    --muted-white: rgba(255, 255, 255, 0.7);
+    --glass-bg: rgba(10, 22, 40, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glow-blue: rgba(37, 99, 235, 0.3);
+    --glow-cyan: rgba(6, 182, 212, 0.2);
+
+    --background: 220 45% 5%;
+    --foreground: 0 0% 100%;
+    --card: 220 45% 5%;
+    --card-foreground: 0 0% 100%;
+    --popover: 220 45% 5%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 220 90% 56%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 215 55% 24%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 215 55% 24%;
+    --muted-foreground: 0 0% 100% / 0.7;
+    --accent: 187 94% 43%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 355 78% 56%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 100% / 0.08;
+    --input: 0 0% 100% / 0.08;
+    --ring: 220 90% 56%;
+    --radius: 0.625rem;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    background-color: var(--deep-navy);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  * {
+    @apply border-border;
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.0;
+  }
+
+  .font-section-heading {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+
+  .font-mono-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 400;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    line-height: 1.4;
+  }
+
+  .glass-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .glass-card-hover:hover {
+    box-shadow: 0 0 40px rgba(37, 99, 235, 0.2), 0 8px 32px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .text-gradient-blue {
+    background: linear-gradient(135deg, var(--primary-blue), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .pill-button {
+    border-radius: 50px;
+    padding: 14px 32px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    letter-spacing: 0.02em;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    border: none;
+  }
+
+  .pill-button-primary {
+    background: var(--vibrant-red);
+    color: var(--white);
+    box-shadow: 0 0 20px rgba(230, 57, 70, 0.4);
+  }
+
+  .pill-button-primary:hover {
+    filter: brightness(1.1);
+    transform: scale(1.05);
+  }
+
+  .pill-button-secondary {
+    background: transparent;
+    color: var(--white);
+    border: 1px solid var(--glass-border);
+  }
+
+  .pill-button-secondary:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+@layer utilities {
+  .section-padding {
+    padding-top: clamp(80px, 12vh, 160px);
+    padding-bottom: clamp(80px, 12vh, 160px);
+  }
+}
+
+/* Ticker animation */
+@keyframes ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-scroll {
+  animation: ticker-scroll 30s linear infinite;
+}
+
+/* Scroll indicator dot animation */
+@keyframes scroll-dot {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(24px);
+    opacity: 0.3;
+  }
+}
+
+.scroll-dot-animate {
+  animation: scroll-dot 2s ease-in-out infinite;
+}
+
+/* Hide scrollbar utility */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .ticker-scroll {
+    animation: none;
+  }
+}
