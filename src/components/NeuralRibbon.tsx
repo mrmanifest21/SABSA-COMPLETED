@@ -57,7 +57,13 @@ export default function NeuralRibbon() {
     camera.position.set(0, 5, 14);
     camera.lookAt(0, 0, 0);
 
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    } catch {
+      // WebGL not available (e.g. server-side or no GPU) — skip the 3D background
+      return;
+    }
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
