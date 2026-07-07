@@ -6,3 +6,9 @@ id = "R4JZqSuU-a_-BrfIHtLfE"
 uri = "file://sabsa-vercel.zip"
 type = "unspecified"
 title = "SABSA — Vercel Deploy Package (fixed)"
+
+[[outputs]]
+id = "LIphoAy8t3FQGmtV7MrNG"
+uri = "file://SABSA-fixed.zip"
+type = "unspecified"
+title = "SABSA-fixed.zip"
