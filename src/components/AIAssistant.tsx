@@ -35,8 +35,14 @@ export default function AIAssistant() {
   ]);
   const [typing, setTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const mountedRef = useRef(false);
 
   useEffect(() => {
+    // Skip scroll on first mount — only scroll when new messages arrive
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      return;
+    }
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, typing]);
 

@@ -119,10 +119,19 @@ export default function NeuralRibbon() {
     };
     window.addEventListener('touchmove', onTouchMove);
 
-    // Animation loop
+    // Animation loop — pauses automatically when canvas scrolls off-screen
     let animationId: number;
+    let visible = true;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => { visible = entry.isIntersecting; },
+      { threshold: 0 }
+    );
+    observer.observe(canvas);
+
     const animate = () => {
       animationId = requestAnimationFrame(animate);
+      if (!visible) return;
 
       const elapsed = clock.getElapsedTime();
       material.uniforms.uTime.value = elapsed;
@@ -151,6 +160,7 @@ export default function NeuralRibbon() {
 
     return () => {
       cancelAnimationFrame(animationId);
+      observer.disconnect();
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('resize', onResize);

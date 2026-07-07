@@ -79,12 +79,14 @@ export default function Hero({ onOpenQuiz }: { onOpenQuiz: () => void }) {
       const mx = mouseRef.current.x * canvas.width;
       const my = mouseRef.current.y * canvas.height;
 
+      const TWO_PI = Math.PI * 2;
       particlesRef.current.forEach((p) => {
-        // Mouse attraction (gentle pull)
+        // Mouse attraction (gentle pull) — use squared distance, skip sqrt
         const dx = mx - p.x;
         const dy = my - p.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist > 1 && dist < 200) {
+        const distSq = dx * dx + dy * dy;
+        if (distSq > 1 && distSq < 40000) {
+          const dist = Math.sqrt(distSq);
           p.vx += (dx / dist) * 0.015;
           p.vy += (dy / dist) * 0.015;
         }
@@ -105,35 +107,28 @@ export default function Hero({ onOpenQuiz }: { onOpenQuiz: () => void }) {
 
         const pulseOpacity = p.opacity * (0.7 + 0.3 * Math.sin(p.pulse));
 
-        // Draw particle glow
-        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 4);
-        gradient.addColorStop(0, `rgba(6, 182, 212, ${pulseOpacity})`);
-        gradient.addColorStop(1, `rgba(6, 182, 212, 0)`);
+        // Simple filled circle — no per-frame gradient allocation
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r * 4, 0, Math.PI * 2);
-        ctx.fillStyle = gradient;
-        ctx.fill();
-
-        // Core dot
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(6, 182, 212, ${pulseOpacity * 1.5})`;
+        ctx.arc(p.x, p.y, p.r * 2.5, 0, TWO_PI);
+        ctx.fillStyle = `rgba(6,182,212,${(pulseOpacity * 0.9).toFixed(2)})`;
         ctx.fill();
       });
 
-      // Draw connections
+      // Draw connections — squared distance avoids sqrt on every pair
       const pts = particlesRef.current;
+      const CONN_SQ = 9000; // 95px threshold
+      ctx.lineWidth = 0.5;
       for (let i = 0; i < pts.length; i++) {
         for (let j = i + 1; j < pts.length; j++) {
           const dx = pts[i].x - pts[j].x;
           const dy = pts[i].y - pts[j].y;
-          const d = Math.sqrt(dx * dx + dy * dy);
-          if (d < 100) {
+          const dSq = dx * dx + dy * dy;
+          if (dSq < CONN_SQ) {
+            const alpha = (1 - dSq / CONN_SQ) * 0.12;
             ctx.beginPath();
             ctx.moveTo(pts[i].x, pts[i].y);
             ctx.lineTo(pts[j].x, pts[j].y);
-            ctx.strokeStyle = `rgba(6, 182, 212, ${(1 - d / 100) * 0.15})`;
-            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = `rgba(6,182,212,${alpha.toFixed(2)})`;
             ctx.stroke();
           }
         }
