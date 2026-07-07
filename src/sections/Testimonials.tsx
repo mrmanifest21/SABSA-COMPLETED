@@ -1,193 +1,219 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, Star, Quote } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Quote, Pause, Play } from 'lucide-react';
 
 const testimonials = [
   {
     name: 'Sarah M.',
     role: 'Parent',
     location: 'Gauteng',
+    initials: 'SM',
+    colour: '#06B6D4',
     text: "Since starting SABSA, my son's focus in school has improved dramatically. His teacher noticed the difference within weeks. The sensory exercises are fun and he actually looks forward to them. It's been life-changing for our family.",
-    rating: 5,
+    tag: 'Child — Focus & Attention',
   },
   {
     name: 'Thabo K.',
     role: 'Parent',
     location: 'Western Cape',
+    initials: 'TK',
+    colour: '#2563EB',
     text: "My daughter struggled with anxiety and social interaction. The SABSA team created a personalised plan that addressed her specific needs. She's now more confident, sleeps better, and has made friends at school. We are incredibly grateful.",
-    rating: 5,
+    tag: 'Child — Anxiety & Social Skills',
   },
   {
     name: 'Mrs. Nkosi',
     role: 'Special School Educator',
     location: 'KZN',
-    text: "SABSA has been instrumental in supporting our learners with developmental challenges. Their specialised approach helps children who traditional methods could not reach. The progress we have seen in attention, behaviour, and motor skills has been remarkable.",
-    rating: 5,
+    initials: 'MN',
+    colour: '#7C3AED',
+    text: "SABSA has been instrumental in supporting our learners with developmental challenges. Their specialised approach helps children who traditional methods could not reach. The progress in attention, behaviour, and motor skills has been remarkable.",
+    tag: 'Special Schools',
   },
   {
     name: 'Lerato D.',
     role: 'Adult Participant',
     location: 'Johannesburg',
+    initials: 'LD',
+    colour: '#10B981',
     text: "I joined SABSA for chronic stress and balance issues. The program is holistic and the team truly cares. My coordination has improved, I feel calmer, and I have tools to manage my anxiety daily. Highly recommend for adults too.",
-    rating: 5,
+    tag: 'Adult — Chronic Wellness',
   },
   {
     name: 'Mr. & Mrs. Peters',
     role: 'Parents of Teen Participant',
     location: 'Pretoria',
+    initials: 'PP',
+    colour: '#F59E0B',
     text: "Our teenager was struggling with depression and isolation. The teen boot camp gave him purpose, community, and tools to regulate his emotions. He came back a different person — more engaged, hopeful, and connected. Thank you SABSA.",
-    rating: 5,
+    tag: 'Teen — Depression Support',
   },
   {
     name: 'Grace N.',
     role: 'Grandparent',
     location: 'Cape Town',
+    initials: 'GN',
+    colour: '#E63946',
     text: "At 72, I was worried about falling and losing my independence. The elderly balance program at SABSA has given me confidence to move freely again. The exercises are gentle but effective. I feel stronger and more stable every day.",
-    rating: 5,
+    tag: 'Elderly — Balance & Movement',
   },
 ];
+
+function TestimonialCard({ t, isVisible, delay }: { t: typeof testimonials[0]; isVisible: boolean; delay: number }) {
+  return (
+    <div
+      className="glass-card p-6 flex flex-col gap-4 h-full"
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateY(0)' : 'translateY(24px)',
+        transition: `opacity 0.6s ease ${delay}s, transform 0.6s ease ${delay}s`,
+        borderTop: `2px solid ${t.colour}44`,
+      }}
+    >
+      {/* Quote icon */}
+      <Quote className="w-7 h-7 opacity-20" style={{ color: t.colour }} />
+
+      {/* Tag */}
+      <span
+        className="self-start text-[0.65rem] font-mono tracking-wider px-2.5 py-1 rounded-full"
+        style={{ background: `${t.colour}14`, color: t.colour, border: `1px solid ${t.colour}25` }}
+      >
+        {t.tag}
+      </span>
+
+      {/* Text */}
+      <p className="text-[0.875rem] text-[rgba(255,255,255,0.8)] leading-[1.7] flex-1 italic">
+        "{t.text}"
+      </p>
+
+      {/* Author */}
+      <div className="flex items-center gap-3 pt-3 border-t border-[rgba(255,255,255,0.07)]">
+        <div
+          className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0"
+          style={{ background: `linear-gradient(135deg, ${t.colour}cc, ${t.colour}66)` }}
+        >
+          {t.initials}
+        </div>
+        <div>
+          <p className="font-semibold text-white text-[0.875rem]">{t.name}</p>
+          <p className="text-[0.75rem] text-[rgba(255,255,255,0.5)]">{t.role} · {t.location}</p>
+        </div>
+        {/* Verified badge */}
+        <div className="ml-auto flex items-center gap-1">
+          <div className="w-4 h-4 rounded-full bg-[#10B981] flex items-center justify-center">
+            <svg viewBox="0 0 12 12" className="w-2.5 h-2.5 fill-white"><path d="M10 3L5 9 2 6" stroke="white" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </div>
+          <span className="text-[0.6rem] text-[rgba(255,255,255,0.3)] font-mono">Verified</span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Testimonials() {
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  // Mobile carousel state
   const [active, setActive] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check, { passive: true });
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.2 }
+      ([entry]) => { if (entry.isIntersecting) { setIsVisible(true); observer.disconnect(); } },
+      { threshold: 0.1 }
     );
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
 
-  // Auto-rotate
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  // Mobile auto-rotate — pauses on user interaction or when user prefers reduced motion
   useEffect(() => {
-    if (isPaused) return;
-    const timer = setInterval(() => {
-      setActive((a) => (a + 1) % testimonials.length);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, [isPaused]);
+    if (!isMobile || !isAutoPlaying) return;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+    const t = setInterval(() => setActive(a => (a + 1) % testimonials.length), 6000);
+    return () => clearInterval(t);
+  }, [isMobile, isAutoPlaying]);
 
-  const goTo = useCallback(
-    (dir: number) => {
-      setActive((a) => {
-        const next = a + dir;
-        if (next < 0) return testimonials.length - 1;
-        if (next >= testimonials.length) return 0;
-        return next;
-      });
-    },
-    []
-  );
-
-  const t = testimonials[active];
+  const goTo = useCallback((dir: number) => {
+    setActive(a => { const n = a + dir; if (n < 0) return testimonials.length - 1; if (n >= testimonials.length) return 0; return n; });
+  }, []);
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative section-padding bg-[#0A1628]"
-      style={{ zIndex: 2 }}
-    >
-      <div className="max-w-[1280px] mx-auto px-6">
+    <section ref={sectionRef} className="relative section-padding bg-[#0A1628]" style={{ zIndex: 2 }}>
+      {/* Ambient glow */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 60%, rgba(37,99,235,0.06) 0%, transparent 70%)' }} />
+
+      <div className="max-w-[1280px] mx-auto px-6 relative z-10">
         {/* Header */}
-        <div className="text-center mb-12">
-          <span
-            className={`font-mono text-[0.75rem] tracking-[0.12em] text-[#06B6D4] block mb-4 transition-all duration-700 ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-            }`}
-          >
+        <div className="text-center mb-14">
+          <span className={`font-mono text-[0.7rem] tracking-[0.2em] text-[#06B6D4] block mb-4 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
             TESTIMONIALS
           </span>
-          <h2
-            className={`font-sans font-bold text-[clamp(2rem,4vw,3.5rem)] text-white leading-[1.1] tracking-[-0.01em] transition-all duration-700 ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-            }`}
-            style={{ transitionDelay: '0.1s' }}
-          >
+          <h2 className={`font-bold text-[clamp(2rem,4vw,3.2rem)] text-white leading-tight tracking-tight transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: '0.1s' }}>
             Families See the Difference
           </h2>
+          <p className={`mt-4 text-[rgba(255,255,255,0.55)] text-[0.9rem] transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: '0.2s' }}>
+            Real stories from real people across South Africa.
+          </p>
         </div>
 
-        {/* Carousel */}
-        <div
-          className={`max-w-[800px] mx-auto transition-all duration-700 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
-          style={{ transitionDelay: '0.3s' }}
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-        >
-          <div className="glass-card p-8 md:p-12 relative">
-            {/* Quote icon */}
-            <Quote className="absolute top-6 right-6 w-10 h-10 text-[rgba(6,182,212,0.15)]" />
+        {/* Desktop: 3-column grid */}
+        <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-5">
+          {testimonials.map((t, i) => (
+            <TestimonialCard key={t.name} t={t} isVisible={isVisible} delay={0.1 * i} />
+          ))}
+        </div>
 
-            {/* Stars */}
-            <div className="flex gap-1 mb-5">
-              {Array.from({ length: t.rating }).map((_, i) => (
-                <Star
-                  key={i}
-                  className="w-5 h-5 text-[#F4A261] fill-[#F4A261]"
-                />
-              ))}
-            </div>
+        {/* Mobile: single carousel */}
+        <div className="md:hidden">
+          <div className="relative">
+            <TestimonialCard t={testimonials[active]} isVisible={isVisible} delay={0} />
 
-            {/* Text */}
-            <p className="text-lg md:text-xl text-[rgba(255,255,255,0.85)] leading-relaxed mb-8 italic">
-              &ldquo;{t.text}&rdquo;
-            </p>
-
-            {/* Author */}
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#2563EB] to-[#06B6D4] flex items-center justify-center text-white font-bold text-lg">
-                {t.name.charAt(0)}
-              </div>
-              <div>
-                <p className="font-semibold text-white">{t.name}</p>
-                <p className="text-sm text-[rgba(255,255,255,0.6)]">
-                  {t.role} &middot; {t.location}
-                </p>
-              </div>
-            </div>
-
-            {/* Navigation */}
-            <div className="flex items-center justify-between mt-8 pt-6 border-t border-[rgba(255,255,255,0.08)]">
+            {/* Nav */}
+            <div className="flex items-center justify-between mt-5">
               <button
-                onClick={() => goTo(-1)}
-                className="w-10 h-10 rounded-full border border-[rgba(255,255,255,0.15)] flex items-center justify-center text-white hover:bg-[rgba(255,255,255,0.1)] transition-colors"
+                onClick={() => { goTo(-1); setIsAutoPlaying(false); }}
+                className="w-10 h-10 rounded-full border border-[rgba(255,255,255,0.15)] flex items-center justify-center text-white hover:bg-[rgba(255,255,255,0.08)] transition-colors"
+                aria-label="Previous testimonial"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
-
-              {/* Dots */}
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setIsAutoPlaying(p => !p)}
+                  className="w-6 h-6 flex items-center justify-center text-[rgba(255,255,255,0.4)] hover:text-white transition-colors"
+                  aria-label={isAutoPlaying ? 'Pause auto-advance' : 'Resume auto-advance'}
+                >
+                  {isAutoPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
+                </button>
                 {testimonials.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setActive(i)}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      i === active
-                        ? 'w-8 bg-[#06B6D4]'
-                        : 'w-2 bg-[rgba(255,255,255,0.2)] hover:bg-[rgba(255,255,255,0.4)]'
-                    }`}
-                  />
+                  <button key={i} onClick={() => { setActive(i); setIsAutoPlaying(false); }} className="rounded-full transition-all duration-300" style={{ width: i === active ? 20 : 6, height: 6, background: i === active ? '#06B6D4' : 'rgba(255,255,255,0.2)' }} aria-label={`Go to testimonial ${i + 1}`} />
                 ))}
               </div>
-
-              <button
-                onClick={() => goTo(1)}
-                className="w-10 h-10 rounded-full border border-[rgba(255,255,255,0.15)] flex items-center justify-center text-white hover:bg-[rgba(255,255,255,0.1)] transition-colors"
-              >
+              <button onClick={() => { goTo(1); setIsAutoPlaying(false); }} className="w-10 h-10 rounded-full border border-[rgba(255,255,255,0.15)] flex items-center justify-center text-white hover:bg-[rgba(255,255,255,0.08)] transition-colors" aria-label="Next testimonial">
                 <ChevronRight className="w-5 h-5" />
               </button>
             </div>
           </div>
+        </div>
+
+        {/* Trust bar */}
+        <div className={`flex flex-wrap items-center justify-center gap-6 mt-14 pt-10 border-t border-[rgba(255,255,255,0.06)] transition-all duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '0.7s' }}>
+          {[['6', 'Intervention Domains'], ['15+', 'Partner Schools'], ['100%', 'Drug-Free'], ['All Ages', 'From toddlers to 70+']].map(([val, label]) => (
+            <div key={label} className="text-center">
+              <p className="font-bold text-white text-[1.3rem] leading-none">{val}</p>
+              <p className="text-[rgba(255,255,255,0.45)] text-[0.75rem] mt-1">{label}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>

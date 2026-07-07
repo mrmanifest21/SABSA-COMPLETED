@@ -1,43 +1,34 @@
 import { useEffect, useRef, useState } from 'react';
+import { MapPin } from 'lucide-react';
 
 interface StatItem {
   value: string;
   numericValue: number;
   suffix: string;
+  prefix?: string;
   label: string;
-  isCustom?: boolean;
+  sub: string;
+  colour: string;
 }
 
 const stats: StatItem[] = [
-  { value: '15+', numericValue: 15, suffix: '+', label: 'Partner Schools' },
-  { value: '6', numericValue: 6, suffix: '', label: 'Intervention Domains' },
-  { value: '100%', numericValue: 100, suffix: '%', label: 'Drug-Free Approach' },
-  { value: 'Custom', numericValue: 0, suffix: '', label: 'Outcome-Based Plans', isCustom: true },
+  { value: '2 000+', numericValue: 2000, suffix: '+', label: 'Learners Reached', sub: 'Across all programmes', colour: '#06B6D4' },
+  { value: '15+', numericValue: 15, suffix: '+', label: 'Partner Schools', sub: 'Active partnerships', colour: '#2563EB' },
+  { value: '100%', numericValue: 100, suffix: '%', label: 'Drug-Free', sub: 'No medication. Ever.', colour: '#10B981' },
+  { value: '6', numericValue: 6, suffix: '', label: 'Intervention Domains', sub: 'Holistic approach', colour: '#7C3AED' },
 ];
 
-function AnimatedCounter({
-  target,
-  suffix,
-  isVisible,
-  delay,
-  isCustom,
-}: {
-  target: number;
-  suffix: string;
-  isVisible: boolean;
-  delay: number;
-  isCustom?: boolean;
-}) {
+const regions = ['Gauteng', 'Western Cape', 'KwaZulu-Natal', 'Eastern Cape', 'Limpopo', 'Mpumalanga'];
+
+function AnimatedCounter({ target, suffix, prefix = '', isVisible, delay }: { target: number; suffix: string; prefix?: string; isVisible: boolean; delay: number }) {
   const [count, setCount] = useState(0);
+  const animated = useRef(false);
 
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible || animated.current) return;
+    animated.current = true;
     const timer = setTimeout(() => {
-      if (isCustom) {
-        setCount(0);
-        return;
-      }
-      const duration = 2000;
+      const duration = 1800;
       const startTime = Date.now();
       const animate = () => {
         const elapsed = Date.now() - startTime;
@@ -49,20 +40,11 @@ function AnimatedCounter({
       requestAnimationFrame(animate);
     }, delay);
     return () => clearTimeout(timer);
-  }, [isVisible, target, delay, isCustom]);
-
-  if (isCustom) {
-    return (
-      <span className="font-sans font-bold text-[clamp(3rem,6vw,5rem)] text-white leading-none tracking-[-0.02em]">
-        Custom
-      </span>
-    );
-  }
+  }, [isVisible, target, delay]);
 
   return (
-    <span className="font-sans font-bold text-[clamp(3rem,6vw,5rem)] text-white leading-none tracking-[-0.02em]">
-      {count}
-      {suffix}
+    <span className="font-bold text-[clamp(2.5rem,5vw,4rem)] text-white leading-none tracking-tight tabular-nums">
+      {prefix}{count.toLocaleString()}{suffix}
     </span>
   );
 }
@@ -73,13 +55,8 @@ export default function Impact() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.3 }
+      ([entry]) => { if (entry.isIntersecting) { setIsVisible(true); observer.disconnect(); } },
+      { threshold: 0.2 }
     );
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
@@ -88,62 +65,76 @@ export default function Impact() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-[120px] bg-[#0A1628] border-b border-[rgba(255,255,255,0.08)]"
-      style={{ zIndex: 2 }}
+      className="relative py-24 overflow-hidden"
+      style={{ zIndex: 2, background: 'linear-gradient(135deg, #0A1628 0%, #0d2040 50%, #0A1628 100%)' }}
     >
-      <div className="max-w-[1000px] mx-auto px-6">
+      {/* Background glow */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(6,182,212,0.06) 0%, transparent 65%)' }} />
+      {/* Decorative grid */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
+
+      <div className="max-w-[1200px] mx-auto px-6 relative z-10">
         {/* Header */}
-        <div className="text-center">
-          <span
-            className={`font-mono text-[0.75rem] tracking-[0.12em] text-[#06B6D4] block mb-4 transition-all duration-700 ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-            }`}
-          >
+        <div className="text-center mb-16">
+          <span className={`font-mono text-[0.7rem] tracking-[0.2em] text-[#06B6D4] block mb-4 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
             COMMUNITY IMPACT
           </span>
-          <h2
-            className={`font-sans font-bold text-[2rem] text-white leading-[1.1] tracking-[-0.01em] transition-all duration-700 ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-            }`}
-            style={{ transitionDelay: '0.1s' }}
-          >
-            Community-Focused Impact
+          <h2 className={`font-bold text-[clamp(2rem,4vw,3rem)] text-white leading-tight tracking-tight transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: '0.1s' }}>
+            Changing Lives Across{' '}
+            <span className="text-gradient-blue">South Africa</span>
           </h2>
-          <p
-            className={`mt-4 text-base text-[rgba(255,255,255,0.7)] leading-relaxed max-w-[700px] mx-auto transition-all duration-700 ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-            }`}
-            style={{ transitionDelay: '0.2s' }}
-          >
-            Partnering with schools, clinics, and community centres across Gauteng, Western Cape,
-            and KZN. Personalised assessments guide each journey — results are measured in improved
-            daily functioning.
-          </p>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mt-14">
+        {/* Stats grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-14">
           {stats.map((stat, i) => (
             <div
               key={stat.label}
-              className={`text-center transition-all duration-700 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
-              style={{ transitionDelay: `${0.3 + i * 0.15}s` }}
+              className="glass-card p-6 flex flex-col gap-2 text-center"
+              style={{
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(24px)',
+                transition: `opacity 0.6s ease ${0.1 + i * 0.12}s, transform 0.6s ease ${0.1 + i * 0.12}s`,
+                borderBottom: `2px solid ${stat.colour}55`,
+              }}
             >
-              <AnimatedCounter
-                target={stat.numericValue}
-                suffix={stat.suffix}
-                isVisible={isVisible}
-                delay={i * 200}
-                isCustom={stat.isCustom}
-              />
-              <p className="mt-2 font-medium text-[0.875rem] text-[rgba(255,255,255,0.7)]">
-                {stat.label}
-              </p>
+              <AnimatedCounter target={stat.numericValue} suffix={stat.suffix} isVisible={isVisible} delay={(i + 1) * 180} />
+              <p className="font-semibold text-white text-[0.875rem] mt-1">{stat.label}</p>
+              <p className="text-[rgba(255,255,255,0.45)] text-[0.72rem] font-mono">{stat.sub}</p>
+              <div className="h-0.5 w-8 mx-auto rounded-full mt-1" style={{ background: stat.colour }} />
             </div>
           ))}
         </div>
+
+        {/* Regions */}
+        <div
+          className="glass-card p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5"
+          style={{ opacity: isVisible ? 1 : 0, transition: 'opacity 0.7s ease 0.6s' }}
+        >
+          <div className="flex items-center gap-2 shrink-0">
+            <MapPin className="w-4 h-4 text-[#06B6D4]" />
+            <span className="font-mono text-[0.7rem] tracking-[0.15em] text-[#06B6D4] uppercase">Active Provinces</span>
+          </div>
+          <div className="h-px flex-1 hidden sm:block bg-[rgba(255,255,255,0.06)]" />
+          <div className="flex flex-wrap gap-2">
+            {regions.map((r) => (
+              <span
+                key={r}
+                className="text-[0.75rem] font-medium px-3 py-1.5 rounded-full bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] text-[rgba(255,255,255,0.7)]"
+              >
+                {r}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Mission line */}
+        <p
+          className="text-center text-[rgba(255,255,255,0.4)] text-[0.8rem] mt-10 leading-relaxed"
+          style={{ opacity: isVisible ? 1 : 0, transition: 'opacity 0.7s ease 0.8s' }}
+        >
+          Partnering with schools, clinics, and community centres — personalised assessments guide every journey.
+        </p>
       </div>
     </section>
   );
