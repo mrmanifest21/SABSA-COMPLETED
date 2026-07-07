@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, X, Expand, Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Expand } from 'lucide-react';
 
 /* ─── Story data ─────────────────────────────────────────────────── */
 

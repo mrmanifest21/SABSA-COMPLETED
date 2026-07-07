@@ -26,7 +26,6 @@ const MOCK_RESPONSES: Record<string, string> = {
 type Message = { role: 'user' | 'assistant'; text: string };
 
 export default function AIAssistant() {
-  const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([
     {
