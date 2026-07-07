@@ -184,6 +184,12 @@
   scrollbar-width: none;
 }
 
+/* Bounce animation for typing indicator */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50% { transform: translateY(-5px); opacity: 1; }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

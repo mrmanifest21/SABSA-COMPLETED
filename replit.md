@@ -36,6 +36,26 @@ public/
   videos/         Static video assets
 ```
 
+## Page structure (scroll order)
+
+1. **Hero** — full-screen video bg (`brain-hero.mp4` → fallback `hero-ambient.mp4`), mouse-reactive neural particle canvas, "Unlock Your Brain's Potential"
+2. **NeuralConnections** — `neurons.mp4` bg, 4 glass cards on brain communication
+3. **SensoryProcessing** — `sensory-system.mp4` bg, interactive 5-sense selector panel
+4. **RegulationPerformance** — `wellness.mp4` bg, expandable 4-pillar cards
+5. **About, Science, Programs, HowItWorks, Difference, Founder, Impact, Testimonials, Gallery, GetStarted** — existing SABSA sections
+6. **AIAssistant** — chat UI placeholder with preset questions + mock responses
+7. **Contact** — existing EmailJS form
+
+## Adding real video assets
+
+Drop MP4 files into `public/videos/` with these exact names to activate each cinematic section:
+- `brain-hero.mp4` → Hero background
+- `neurons.mp4` → Neural Connections section
+- `sensory-system.mp4` → Sensory Processing section
+- `wellness.mp4` → Regulation & Performance section
+
+The `VideoBackground` component (`src/components/VideoBackground.tsx`) handles lazy loading, autoplay, loop, and graceful fallback to `hero-ambient.mp4` automatically.
+
 ## Notes
 
 - The Three.js NeuralRibbon background silently skips rendering if WebGL is unavailable (e.g. Replit dev server has no GPU). The rest of the site renders normally.

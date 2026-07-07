@@ -3,8 +3,14 @@ import NeuralRibbon from './components/NeuralRibbon';
 import Navigation from './components/Navigation';
 import AssessmentQuiz from './components/AssessmentQuiz';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
+import AIAssistant from './components/AIAssistant';
 import Footer from './components/Footer';
+
+// Sections
 import Hero from './sections/Hero';
+import NeuralConnections from './sections/NeuralConnections';
+import SensoryProcessing from './sections/SensoryProcessing';
+import RegulationPerformance from './sections/RegulationPerformance';
 import About from './sections/About';
 import Science from './sections/Science';
 import Programs from './sections/Programs';
@@ -25,7 +31,7 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen bg-[#0A1628]">
-      {/* 3D Neural Ribbon Background - persistent throughout */}
+      {/* 3D Neural Ribbon Background — persistent throughout */}
       <NeuralRibbon />
 
       {/* Navigation */}
@@ -39,7 +45,13 @@ export default function App() {
 
       {/* Main Content */}
       <main className="relative">
+        {/* ── Immersive cinematic intro ── */}
         <Hero onOpenQuiz={openQuiz} />
+        <NeuralConnections />
+        <SensoryProcessing />
+        <RegulationPerformance />
+
+        {/* ── Existing SABSA content ── */}
         <About />
         <Science />
         <Programs />
@@ -50,6 +62,11 @@ export default function App() {
         <Testimonials />
         <Gallery />
         <GetStarted onOpenQuiz={openQuiz} />
+
+        {/* ── AI Assistant (future-ready) ── */}
+        <AIAssistant />
+
+        {/* ── Contact / Services & Booking ── */}
         <Contact />
       </main>
 

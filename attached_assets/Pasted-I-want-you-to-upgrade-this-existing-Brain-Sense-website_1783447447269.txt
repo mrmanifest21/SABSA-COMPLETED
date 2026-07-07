@@ -1,0 +1,249 @@
+I want you to upgrade this existing Brain Sense website into a premium, futuristic interactive neuroscience experience.
+
+IMPORTANT:
+Do not rebuild the project from scratch.
+Use the existing codebase.
+Keep all current business information, services, contact details, booking functionality, and SEO structure.
+
+First analyze the entire project and understand:
+- framework being used
+- homepage location
+- components
+- styling system
+- routing
+- existing assets
+
+Then implement the upgrade carefully.
+
+PROJECT VISION:
+
+Transform Brain Sense into an immersive digital experience where visitors feel like they are entering the human brain.
+
+The website should feel like:
+- Apple-level premium design
+- futuristic medical technology
+- neuroscience visualization
+- elegant and trustworthy healthcare branding
+
+The experience should communicate:
+- sensory processing
+- brain health
+- learning
+- performance
+- wellbeing
+
+
+DESIGN STYLE:
+
+Create a premium dark interface with:
+- deep space backgrounds
+- glowing neural particles
+- glassmorphism cards
+- smooth animations
+- elegant typography
+- cinematic transitions
+- professional healthcare feeling
+
+Avoid looking like a gaming website.
+It must remain credible for a neuroscience brand.
+
+
+HERO SECTION:
+
+Replace the current homepage hero with a full-screen immersive experience.
+
+Use the AI-generated video asset:
+
+/public/videos/brain-hero.mp4
+
+as the background.
+
+Add:
+- full viewport video background
+- dark overlay for readability
+- animated headline
+- subtle mouse movement effects
+- floating particles
+- glowing neural effects
+- smooth entrance animation
+
+Hero text:
+
+"Unlock Your Brain's Potential"
+
+Subtitle:
+
+"Understanding sensory processing to improve learning, performance and wellbeing."
+
+Primary button:
+
+"Discover Your Sensory Profile"
+
+
+3D INTERACTIVE EXPERIENCE:
+
+Create an interactive neuroscience environment.
+
+Add:
+- Three.js or React Three Fiber if compatible
+- floating neural particles
+- depth effects
+- subtle camera movement
+- mouse-reactive lighting
+- smooth animations
+
+The mouse should influence:
+- particle movement
+- lighting
+- background motion
+- visual depth
+
+
+VIDEO SYSTEM:
+
+Create a reusable video background component.
+
+Use these assets:
+
+/public/videos/brain-hero.mp4
+/public/videos/neurons.mp4
+/public/videos/sensory-system.mp4
+/public/videos/wellness.mp4
+
+Requirements:
+- videos must autoplay silently
+- loop smoothly
+- load efficiently
+- work on mobile
+- include fallback backgrounds
+- be easy to replace later
+
+
+CREATE A CINEMATIC SCROLL EXPERIENCE:
+
+Turn the homepage into a storytelling journey.
+
+SECTION 1:
+THE HUMAN BRAIN
+
+Background:
+brain-hero.mp4
+
+Message:
+Introduce Brain Sense and the importance of understanding the brain.
+
+
+SECTION 2:
+NEURAL CONNECTIONS
+
+Background:
+neurons.mp4
+
+Show:
+- neural activity
+- connections
+- brain communication
+
+
+SECTION 3:
+SENSORY PROCESSING
+
+Background:
+sensory-system.mp4
+
+Explain:
+- vision
+- hearing
+- touch
+- vestibular system
+- proprioception
+
+
+SECTION 4:
+REGULATION AND PERFORMANCE
+
+Background:
+wellness.mp4
+
+Explain how sensory understanding can improve:
+- learning
+- productivity
+- emotional regulation
+- wellbeing
+
+
+SECTION 5:
+SERVICES AND BOOKING
+
+Create a premium conversion section.
+
+Keep existing:
+- assessment information
+- contact details
+- booking links/forms
+
+
+ANIMATIONS:
+
+Use:
+- GSAP where useful
+- Framer Motion where useful
+- smooth scrolling
+- fade transitions
+- parallax effects
+
+Animations must feel premium and smooth, not distracting.
+
+
+RESPONSIVE DESIGN:
+
+The website must work perfectly on:
+- desktop
+- tablet
+- mobile
+
+On mobile:
+- reduce heavy effects
+- optimize video loading
+- maintain premium appearance
+
+
+PERFORMANCE:
+
+Optimize everything:
+- lazy load videos
+- compress assets
+- avoid unnecessary rendering
+- maintain fast loading
+- add loading states if needed
+
+
+AI ASSISTANT:
+
+Create a future-ready section for a Brain Sense AI assistant.
+
+The interface should allow visitors to ask questions like:
+
+"What is sensory processing?"
+"Why am I sensitive to sounds?"
+"How can Brain Sense help me?"
+
+Create the UI and placeholder functionality first.
+
+
+FINAL REQUIREMENTS:
+
+Before making changes:
+Explain the implementation plan.
+
+Then implement step by step.
+
+After every major change:
+1. Run the project.
+2. Check for errors.
+3. Fix errors.
+4. Confirm the website still works.
+
+Do not remove existing functionality.
+
+The final result should feel like a world-class interactive neuroscience website.
